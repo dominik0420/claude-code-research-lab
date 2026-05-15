@@ -1,7 +1,9 @@
+<div align="center">
+
 # Claude Code Research Lab
 
-Turn a single Claude Code session into a full research lab.  
-22 agents. 37 commands. 12 hooks. Two tracks: ML and Social Science.
+**Turn a single Claude Code session into a full research lab.**  
+22 agents · 37 commands · 12 hooks · ML and Social Science tracks
 
 [![License: MIT](https://img.shields.io/badge/license-MIT-brightgreen?style=flat-square)](LICENSE)
 [![Agents](https://img.shields.io/badge/agents-22-blue?style=flat-square)](.claude/agents/)
@@ -11,6 +13,10 @@ Turn a single Claude Code session into a full research lab.
 [![Tracks](https://img.shields.io/badge/tracks-ML%20%2B%20Social%20Science-teal?style=flat-square)](#two-tracks)
 [![Built for Claude Code](https://img.shields.io/badge/built%20for-Claude%20Code-black?style=flat-square)](https://claude.ai/code)
 
+[English](README.md) · [中文](README_CN.md)
+
+</div>
+
 ---
 
 ## Setup
@@ -19,25 +25,20 @@ Turn a single Claude Code session into a full research lab.
 git clone https://github.com/YOUR_USERNAME/claude-code-research-lab
 cd claude-code-research-lab
 
-# One-time: activate the lab config
+# Activate the lab configuration (one-time)
 mv lab .claude          # Mac / Linux
 Move-Item lab .claude   # Windows PowerShell
 
 claude
 ```
 
-Then in Claude Code:
-```
-/start
-```
-
-That's it. The decision tree in `/start` asks three questions, determines your research paradigm, and routes you to the right workflow.
+Once inside Claude Code, run `/start`. The onboarding command asks three questions, determines your research paradigm, and routes you to the appropriate workflow. No manual configuration required.
 
 ---
 
 ## Two Tracks
 
-`/start` runs a decision tree and sets the track automatically. You can also set it manually in `CLAUDE.md`.
+`/start` runs a decision tree and sets the active track automatically. The paradigm can also be set manually in `CLAUDE.md`.
 
 | Track | For | Key commands |
 |-------|-----|-------------|
@@ -47,68 +48,68 @@ That's it. The decision tree in `/start` asks three questions, determines your r
 
 ---
 
-## The 37 Commands
+## Commands
 
 ### Discovery
-| Command | What it does |
+| Command | Description |
 |---------|-------------|
-| `/start` | Decision tree: detects paradigm, reads project state, routes to the right workflow |
-| `/help` | Context-aware next-step suggestions |
-| `/status` | Quick project status snapshot |
-| `/ideate [area]` | Brainstorm 3 concrete research directions from a vague topic |
-| `/hypothesis` | Guided process: turn a vague idea into a falsifiable hypothesis with mechanism + prediction |
+| `/start` | Decision tree: detects paradigm, reads project state, routes to the appropriate workflow |
+| `/help` | Context-aware next-step suggestions based on current project state |
+| `/status` | Project status snapshot |
+| `/ideate [area]` | Generate 3 concrete research directions from a vague topic |
+| `/hypothesis` | Guided process: formalize a vague idea into a falsifiable hypothesis with mechanism and quantitative prediction |
 | `/lit-review [topic]` | Systematic literature survey with gap analysis |
-| `/gap-analysis` | Position your contribution against prior work |
+| `/gap-analysis` | Position contribution against prior work |
 | `/research-proposal` | Write the full research proposal document |
 
 ### Planning — ML Track
-| Command | What it does |
+| Command | Description |
 |---------|-------------|
-| `/eval-metrics` | Lock the evaluation protocol — **run before any experiments** |
-| `/experiment-design [name]` | Design an experiment with full spec: conditions, metrics, baselines, compute |
+| `/eval-metrics` | Lock the evaluation protocol — **required before any experiments** |
+| `/experiment-design [name]` | Design an experiment with full spec: conditions, metrics, baselines, compute budget |
 | `/baseline-plan` | Plan and justify all comparison methods |
 | `/ablation-design [method]` | Design the ablation study matrix |
 | `/sprint-plan` | Sprint schedule to submission deadline |
-| `/run-plan` | Execution order and dependencies |
+| `/run-plan` | Execution order and inter-experiment dependencies |
 | `/milestone-review` | Progress review against milestones |
 
 ### Planning — Social Science Track
-| Command | What it does |
+| Command | Description |
 |---------|-------------|
-| `/study-design` | Design type, variables/constructs, validity threats, IRB flags, analysis plan |
-| `/survey-design` | Build a questionnaire: item wording, scales, response format, pilot testing plan |
-| `/irb-protocol` | Full ethics board submission: risk classification, consent form, data management |
-| `/sampling-plan` | Power analysis (quant) or saturation strategy (qual), recruitment plan |
+| `/study-design` | Study design: design type, variables, validity threats, IRB flags, analysis plan |
+| `/survey-design` | Questionnaire instrument: item wording, scales, response format, pilot testing plan |
+| `/irb-protocol` | Ethics board submission: risk classification, consent form, data management plan |
+| `/sampling-plan` | Power analysis (quantitative) or saturation strategy (qualitative) with recruitment plan |
 | `/interview-guide` | Semi-structured interview or focus group guide with verbatim scripts and probes |
-| `/qual-codebook` | Qualitative coding scheme with IRR protocol (Cohen's κ) |
+| `/qual-codebook` | Qualitative coding scheme with inter-rater reliability protocol (Cohen's κ) |
 
 ### Building
-| Command | What it does |
+| Command | Description |
 |---------|-------------|
-| `/data-pipeline [dataset]` | Design and implement the data pipeline |
+| `/data-pipeline [dataset]` | Design and implement the data processing pipeline |
 | `/implement [spec]` | Implement an experiment from its spec file |
 | `/code-review [path]` | Review code for correctness and reproducibility |
 | `/reproduce [paper]` | Implement a baseline paper's results |
 
 ### Analysis
-| Command | What it does |
+| Command | Description |
 |---------|-------------|
-| `/analyze [experiment]` | Analyze results with interpretation |
+| `/analyze [experiment]` | Analyze results with structured interpretation |
 | `/stat-test [experiment]` | Significance tests, regression, Cronbach's α, Cohen's κ |
 | `/visualize` | Generate publication-quality figures |
-| `/failure-analysis [experiment]` | Analyze failure cases and limitations |
+| `/failure-analysis [experiment]` | Analyze failure cases and characterize limitations |
 
 ### Writing
-| Command | What it does |
+| Command | Description |
 |---------|-------------|
-| `/outline-paper` | Paper outline — required before section drafting |
-| `/write-section [section]` | Draft a specific section |
+| `/outline-paper` | Paper outline — must exist before section drafting begins |
+| `/write-section [section]` | Draft a specific paper section |
 | `/review-paper` | Simulated peer review panel |
-| `/write-rebuttal` | Conference rebuttal response |
-| `/camera-ready [venue]` | Final submission checklist |
+| `/write-rebuttal` | Author response to reviewer comments |
+| `/camera-ready [venue]` | Final submission checklist for a specific venue |
 
 ### Orchestration
-| Command | What it does |
+| Command | Description |
 |---------|-------------|
 | `/team-experiments [name]` | Full pipeline: design → build → run → reproduce → verify |
 | `/team-writing` | Full pipeline: outline → draft all sections → integrate |
@@ -116,98 +117,119 @@ That's it. The decision tree in `/start` asks three questions, determines your r
 
 ---
 
-## The 22 Agents
+## Agents
 
-Agents are invoked automatically by commands, or you can call them directly.
+Agents are invoked automatically by commands or can be called directly by name.
 
 ### Tier 1 — Research Leadership (Opus)
-| Agent | Owns |
-|-------|------|
-| `research-director` | Scientific vision, contribution positioning, publish/no-publish |
+| Agent | Domain |
+|-------|--------|
+| `research-director` | Scientific vision, contribution positioning, publish/no-publish decisions |
 | `principal-investigator` | Hypothesis formation, daily research decisions, result interpretation |
 | `project-manager` | Sprints, milestones, deadlines, risk management |
 
 ### Tier 2 — Department Leads (Sonnet)
-| Agent | Owns |
-|-------|------|
+| Agent | Domain |
+|-------|--------|
 | `lead-researcher` | Experiment design, evaluation protocol, ablations — ML Track |
 | `social-researcher` | Study design, survey methodology, qualitative methods, IRB — Social Science Track |
-| `lead-engineer` | Code architecture, quality, infrastructure |
+| `lead-engineer` | Code architecture, quality standards, infrastructure |
 | `data-scientist` | Statistical analysis, data quality, visualization strategy |
 | `paper-author` | Writing strategy, narrative arc, venue compliance |
 | `literature-lead` | Literature survey, gap analysis, related work positioning |
 
 ### Tier 3 — Specialists (Sonnet / Haiku)
-| Agent | Owns |
-|-------|------|
+| Agent | Domain |
+|-------|--------|
 | `ml-engineer` | Model implementation |
 | `data-engineer` | Data pipelines |
-| `stats-analyst` | ML benchmarks, survey stats, regression, reliability measures |
+| `stats-analyst` | ML benchmarks, survey statistics, regression, reliability measures |
 | `viz-engineer` | Figures and tables |
 | `code-reviewer` | Code correctness and reproducibility |
 | `reproducibility-engineer` | End-to-end experiment reproducibility |
 | `ablation-analyst` | Ablation design and interpretation |
 | `baseline-engineer` | Baseline implementation and fair comparison |
-| `scientific-writer` | Section-level writing |
+| `scientific-writer` | Section-level academic writing |
 | `peer-reviewer` | Simulated peer review |
-| `ethics-reviewer` | ML dual-use / Social Science IRB and participant welfare |
+| `ethics-reviewer` | ML dual-use risk / Social Science IRB and participant welfare |
 | `devops-researcher` | Compute infrastructure |
-| `domain-specialist` | Domain-specific knowledge (configurable) |
+| `domain-specialist` | Domain-specific knowledge (configurable per project) |
 
 ---
 
-## Common Workflows
+## Hooks
+
+12 hooks enforce research integrity automatically throughout the session.
+
+| Hook | Event | Behavior |
+|------|-------|----------|
+| `guard-results` | PreToolUse: Write\|Edit | **Blocks** any write to `experiments/results/` — results are immutable |
+| `guard-eval-protocol` | PreToolUse: Bash | Warns before running experiments without a locked evaluation protocol |
+| `guard-irb` | PreToolUse: Write | Warns before writing to data collection paths without an IRB protocol |
+| `validate-experiment-command` | PreToolUse: Bash | Validates experiment commands have config files and output directories |
+| `log-research-activity` | PostToolUse: Write | Auto-appends timestamped entries to `research/research-log.md` |
+| `validate-experiment-spec` | PostToolUse: Write | Validates specs in `experiments/specs/` have all required fields |
+| `update-session-state` | PostToolUse: Write | Keeps `production/session-state/active.md` current after each milestone |
+| `capture-git-hash` | PostToolUse: Bash | Logs git hash and branch to `experiments/run-log.md` after experiment runs |
+| `check-hardcoded-paths` | PostToolUse: Write | Scans Python source files for hardcoded paths, hyperparameters, missing seeds |
+| `track-paper-sections` | PostToolUse: Write | Rebuilds `papers/STATUS.md` with DRAFT / REVIEWED / APPROVED status per section |
+| `experiment-complete-notify` | PostToolUse: Write | Notifies when new results files appear; suggests next commands |
+| `session-summary` | Stop | Prints a full project state checklist at session end |
+
+---
+
+## Workflows
 
 ### ML Track
 
 ```
-# Starting from scratch
-/ideate [area]          → 3 concrete directions
-/lit-review [area]      → survey the space
-/hypothesis             → formalize the question
-/eval-metrics           → lock evaluation before touching code
-/experiment-design      → spec the experiment
-/team-experiments       → design → build → run → verify
+# From a vague idea to a submitted experiment
+/ideate [area]          → 3 concrete research directions
+/lit-review [area]      → systematic survey of the space
+/hypothesis             → formalize the research question
+/eval-metrics           → lock evaluation protocol before writing any code
+/experiment-design      → produce the full experiment specification
+/team-experiments       → design → build → run → reproduce → verify
 
-# Have results, need to write
-/analyze [experiments]
-/stat-test
-/outline-paper
-/team-writing
-/team-review
+# From results to submitted paper
+/analyze [experiment]   → structured interpretation of results
+/stat-test              → significance tests and effect sizes
+/outline-paper          → argument structure
+/team-writing           → draft all sections
+/team-review            → simulated peer review panel
 ```
 
 ### Social Science Track
 
 ```
 # Study design and data collection
-/ideate [topic]         → 3 concrete directions
+/ideate [topic]         → 3 concrete research directions
 /hypothesis             → formalize the research question
 /study-design           → full study design with validity analysis
 /survey-design          → questionnaire instrument
-  or /interview-guide   → interview guide with probes
-/irb-protocol           → ethics board submission
-/sampling-plan          → sample size / saturation strategy
+/interview-guide        → semi-structured interview or focus group guide
+/irb-protocol           → ethics board submission package
+/sampling-plan          → sample size justification and recruitment plan
 
 # Analysis and writing
-/analyze [study]        → run analysis
-/stat-test              → regression, reliability, significance
-  or /qual-codebook     → qualitative coding scheme
+/analyze [study]        → run the planned analysis
+/stat-test              → regression, reliability measures, significance testing
+/qual-codebook          → qualitative coding scheme with IRR protocol
 /outline-paper → /team-writing → /team-review
 ```
 
 ---
 
-## Research Integrity Rules
+## Research Integrity
 
-Enforced automatically — no agent can bypass them:
+The following rules are enforced automatically by hooks and agents. No component in the system can bypass them.
 
-1. **Evaluation protocol is locked before experiments run.** Use `/eval-metrics` first. No moving goalposts.
-2. **Results files are immutable.** Never manually edit `experiments/results/`. Regenerate if wrong.
-3. **Baselines get equal tuning budget.** Strawman comparisons are rejected.
-4. **Research log is append-only.** All decisions recorded in `research/research-log.md`.
-5. **No cherry-picking.** Every condition in the spec must appear in the paper.
-6. **IRB before data collection.** The ethics-reviewer blocks study execution without an IRB plan.
+1. **Evaluation protocol is locked before experiments run.** `/eval-metrics` must exist and be marked `LOCKED` before any experiment command executes.
+2. **Results files are immutable.** Writes to `experiments/results/` are blocked at the hook level. To correct an error, re-run the experiment with an updated config.
+3. **Baselines receive equal tuning budget.** The `baseline-engineer` agent rejects configurations that give the proposed method an unfair advantage.
+4. **Research log is append-only.** `research/research-log.md` is written automatically by the `log-research-activity` hook and is never edited retroactively.
+5. **All conditions are reported.** Every condition defined in an experiment spec must appear in the results section. The `lead-researcher` gate rejects papers that omit conditions.
+6. **IRB precedes data collection.** The `guard-irb` hook warns on any write to data collection paths without `research/irb-protocol.md` present.
 
 ---
 
@@ -217,10 +239,12 @@ Enforced automatically — no agent can bypass them:
 .claude/
   agents/          ← 22 agent definitions
   commands/        ← 37 slash commands
+  hooks/           ← 12 lifecycle hooks
   docs/            ← guides and templates
-    templates/     ← experiment spec, paper outline, sprint plan, etc.
+    templates/     ← experiment spec, paper outline, sprint plan
   rules/           ← path-specific enforcement rules
-CLAUDE.md          ← master config — set your paradigm, domain, and target venue here
+  settings.json    ← hook configuration
+CLAUDE.md          ← master config: paradigm, domain, framework, target venue
 CONTRIBUTING.md
 LICENSE
 README.md
@@ -228,17 +252,17 @@ README_CN.md
 .gitignore
 ```
 
-When you start a project, the lab creates these directories in your working folder:
+Project directories created at runtime:
 
 ```
-research/            ← hypothesis, proposal, research log, study design
+research/            ← hypothesis, proposal, study design, research log
 literature/          ← survey, gap analysis, bibliography
-experiments/         ← specs, configs, results (gitignored)
-src/                 ← models, data, training, evaluation, utils
+experiments/         ← specs, configs, eval protocol, run log, results
+src/                 ← models, data loaders, training, evaluation, utils
 data/                ← raw (gitignored), processed (gitignored)
 baselines/
 analysis/            ← scripts, figures, outputs (gitignored)
-papers/              ← outline, drafts
+papers/              ← outline, section drafts, STATUS.md
 production/          ← milestones, sprints, session state
 ```
 
@@ -246,18 +270,20 @@ production/          ← milestones, sprints, session state
 
 ## Collaboration Protocol
 
-Every agent asks before writing any file:
+Every agent requests permission before writing any file:
 
-> "May I write this to [filepath]?"
+> "May I write this to `[filepath]`?"
 
-No agent writes, edits, or runs experiments without your approval. The flow is always:  
-**Question → Hypothesis → Design → Show Draft → You Approve → Execute**
+No agent writes, edits, or executes experiments without explicit approval. Every workflow follows the same sequence:
+
+**Question → Hypothesis → Design → Draft → Review → Approve → Execute**
 
 ---
 
-## Further Reading
+## Contributing
 
-- `.claude/docs/quick-start.md` — full lifecycle walkthrough, all four starting-point paths
-- `.claude/docs/agent-roster.md` — gate verdicts, delegation maps, full agent reference
-- `.claude/docs/coordination-rules.md` — how agents hand off between each other
-- `.claude/docs/research-standards.md` — research quality standards for both tracks
+See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines on adding agents, commands, and tracks.
+
+## License
+
+[MIT](LICENSE)
