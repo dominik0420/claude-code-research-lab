@@ -1,0 +1,100 @@
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/guard-results.sh",
+            "description": "Block writes to experiments/results/ — results are immutable"
+          },
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/guard-irb.sh",
+            "description": "Warn before data collection without an IRB protocol"
+          }
+        ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/guard-eval-protocol.sh",
+            "description": "Warn before running experiments without a locked eval protocol"
+          },
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/validate-experiment-command.sh",
+            "description": "Validate experiment commands have config files and output dirs"
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/log-research-activity.sh",
+            "description": "Auto-log significant writes to research/research-log.md"
+          },
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/validate-experiment-spec.sh",
+            "description": "Validate experiment specs have required fields"
+          },
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/update-session-state.sh",
+            "description": "Keep production/session-state/active.md current"
+          },
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/check-hardcoded-paths.sh",
+            "description": "Scan Python source files for hardcoded paths and hyperparameters"
+          },
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/track-paper-sections.sh",
+            "description": "Update papers/STATUS.md with section draft/reviewed/approved status"
+          },
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/experiment-complete-notify.sh",
+            "description": "Notify when new results files appear in experiments/results/"
+          },
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/check-config-yaml.sh",
+            "description": "Validate YAML experiment configs have seed, output_dir, and parameters"
+          }
+        ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/capture-git-hash.sh",
+            "description": "Log git hash after experiment runs for reproducibility tracing"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "matcher": ".*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/session-summary.sh",
+            "description": "Print project state summary at end of session"
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,96 @@
+# ============================================================
+# Claude Code Research Lab — .gitignore
+# ============================================================
+# The .claude/ directory IS committed — it's the lab config.
+# Everything below is generated output that should NOT be committed.
+
+# ------ Research outputs (large / regenerated) --------------
+data/raw/
+data/processed/
+experiments/results/
+analysis/outputs/
+
+# ------ Session state (machine-specific, auto-generated) ----
+production/session-state/
+
+# ------ Python --------------------------------------------
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+*.egg
+dist/
+build/
+.eggs/
+.env
+.venv/
+venv/
+env/
+ENV/
+
+# ------ Jupyter -------------------------------------------
+.ipynb_checkpoints/
+*.ipynb_checkpoints
+
+# ------ R -------------------------------------------------
+.Rhistory
+.RData
+.Rproj.user/
+*.Rproj
+
+# ------ SPSS / Stata / SAS --------------------------------
+*.sav
+*.dta
+*.sas7bdat
+
+# ------ LaTeX ---------------------------------------------
+*.aux
+*.bbl
+*.blg
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+*.out
+*.toc
+*.lof
+*.lot
+*.log
+papers/*.pdf
+
+# ------ Editors -------------------------------------------
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ------ Node (if any tooling) -----------------------------
+node_modules/
+npm-debug.log*
+
+# ------ Secrets -------------------------------------------
+.env
+.env.local
+*.pem
+secrets/
+credentials/
+
+# ------ Weights & Biases / MLflow / experiment tracking ----
+wandb/
+mlruns/
+mlflow.db
+
+# ------ Model checkpoints (large) -------------------------
+*.pt
+*.pth
+*.ckpt
+*.safetensors
+checkpoints/
+
+# ------ Misc ----------------------------------------------
+*.log
+*.tmp
+*.bak
