@@ -30,7 +30,7 @@ Q2: "What is the time range to cover?"
 Search strategy (execute in sequence):
 
 1. **Primary search**: `[topic] site:arxiv.org` via WebSearch
-2. **Venue search**: `[topic] NeurIPS ICML ICLR 2022 2023 2024` via WebSearch
+2. **Venue search**: `[topic] NeurIPS ICML ICLR [current year - 2] [current year - 1] [current year]` via WebSearch — use the actual calendar years at time of running
 3. **Related terms**: Identify synonyms and related terms from initial results, search those
 4. **Citation chasing**: From top 3 results, search for papers they cite that are central
 

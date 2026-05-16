@@ -3,12 +3,12 @@
 # Claude Code 科研实验室
 
 **用一个 Claude Code 会话，运行一整个科研实验室。**  
-22 个 Agent · 37 条命令 · 12 个 Hook · ML 与社会科学双轨
+22 个 Agent · 38 条命令 · 13 个 Hook · ML 与社会科学双轨
 
 [![License: MIT](https://img.shields.io/badge/license-MIT-brightgreen?style=flat-square)](LICENSE)
 [![Agents](https://img.shields.io/badge/agents-22-blue?style=flat-square)](.claude/agents/)
-[![Commands](https://img.shields.io/badge/commands-37-blueviolet?style=flat-square)](.claude/commands/)
-[![Hooks](https://img.shields.io/badge/hooks-12-red?style=flat-square)](.claude/hooks/)
+[![Commands](https://img.shields.io/badge/commands-38-blueviolet?style=flat-square)](.claude/commands/)
+[![Hooks](https://img.shields.io/badge/hooks-13-red?style=flat-square)](.claude/hooks/)
 [![Rules](https://img.shields.io/badge/rules-3-orange?style=flat-square)](.claude/rules/)
 [![Tracks](https://img.shields.io/badge/tracks-ML%20%2B%20Social%20Science-teal?style=flat-square)](#两条路线)
 [![Built for Claude Code](https://img.shields.io/badge/built%20for-Claude%20Code-black?style=flat-square)](https://claude.ai/code)
@@ -33,6 +33,8 @@ claude
 ```
 
 进入 Claude Code 后，运行 `/start`。该命令通过三个问题判断研究范式，并将你引导至对应的工作流程，无需手动配置。
+
+**Hook 前置条件：** 13 个生命周期 Hook 需要在 Claude Code 使用的 shell 中能够调用 `bash` 和 `python3`。Mac 和 Linux 用户开箱即用；Windows 用户请安装 [Git for Windows](https://git-scm.com/download/win)（提供 Git Bash），或使用 [WSL](https://learn.microsoft.com/zh-cn/windows/wsl/install) 并在 WSL 内运行 Claude Code。若 `bash` 不可用，Hook 会静默跳过——Agent 和命令功能不受影响。
 
 ---
 
@@ -104,6 +106,7 @@ claude
 |------|------|
 | `/outline-paper` | 论文大纲——章节起草前必须完成 |
 | `/write-section [章节]` | 起草某个章节 |
+| `/compile-paper [会议]` | 将所有章节草稿整合为 `papers/main.tex` 并编译为 PDF |
 | `/review-paper` | 模拟同行评审小组 |
 | `/write-rebuttal` | 对审稿人意见的作者回复 |
 | `/camera-ready [会议]` | 针对特定会议的最终提交清单 |
@@ -159,7 +162,7 @@ claude
 
 ## Hook
 
-12 个 Hook 在整个会话生命周期中自动执行研究诚信规则。
+13 个 Hook 在整个会话生命周期中自动执行研究诚信规则。
 
 | Hook | 触发事件 | 行为 |
 |------|---------|------|
@@ -173,7 +176,8 @@ claude
 | `capture-git-hash` | PostToolUse: Bash | 实验运行后将 Git Hash 和分支记录到 `experiments/run-log.md` |
 | `check-hardcoded-paths` | PostToolUse: Write | 扫描 Python 源文件中的硬编码路径、超参数和缺失随机种子 |
 | `track-paper-sections` | PostToolUse: Write | 写入任何章节草稿后，重建 `papers/STATUS.md` 的进度看板 |
-| `experiment-complete-notify` | PostToolUse: Write | 检测到新结果文件时通知，并建议后续命令 |
+| `check-config-yaml` | PostToolUse: Write | 验证实验 YAML 配置文件包含 `seed`、`output_dir` 和模型参数 |
+| `experiment-complete-notify` | PostToolUse: Bash | 实验运行后检测新结果文件，建议后续分析命令 |
 | `session-summary` | Stop | 会话结束时输出完整的项目状态清单 |
 
 ---
@@ -196,41 +200,51 @@ claude
 /stat-test              → 显著性检验与效应量
 /outline-paper          → 构建论文论证结构
 /team-writing           → 起草所有章节
+/compile-paper [会议]   → 整合 main.tex，编译为 PDF
 /team-review            → 模拟同行评审小组
 ```
 
 ### 社会科学路线
 
 ```
-# 研究设计与数据收集
+# 研究设计
 /ideate [主题]          → 生成 3 个具体研究方向
 /hypothesis             → 形式化研究问题
 /study-design           → 完整研究方案（含效度分析）
-/survey-design          → 问卷量表
-/interview-guide        → 半结构化访谈或焦点小组提纲
 /irb-protocol           → 伦理委员会申请材料包
 /sampling-plan          → 样本量论证与招募方案
 
+# 量表与工具制作
+/survey-design          → 问卷量表（题目、量表类型、反应格式）
+/export-survey [格式]   → 导出为 HTML（可分享）、Qualtrics 导入文件
+                          或本地 Flask 数据收集服务器
+/interview-guide        → 半结构化访谈或焦点小组提纲
+
+# 数据收集（在实验室外部完成——实验室负责生成工具）
+#   → 发送 HTML 链接、上传至 Qualtrics/Google Forms
+#     或运行本地 Flask 服务器用于现场采集
+#   → 采集完成后，导出 CSV 数据
+
 # 分析与写作
-/analyze [研究]         → 执行预定分析
+/analyze [研究]         → 对导入的问卷数据执行预定分析
 /stat-test              → 回归、信度分析、显著性检验
 /qual-codebook          → 质性编码方案与信度协议
-/outline-paper → /team-writing → /team-review
+/outline-paper → /team-writing → /compile-paper → /team-review
 ```
 
 ---
 
 ## 研究诚信规则
 
-以下规则由 Hook 和 Agent 自动执行，系统内任何组件均无法绕过。
+以下规则在整个工作流中由 Hook 和 Agent 共同强化执行，并标注各规则的执行力度。
 
-1. **实验前锁定评估协议。** `/eval-metrics` 必须存在且标记为 `LOCKED`，实验命令方可执行。
-2. **结果文件不可篡改。** `experiments/results/` 的写入操作在 Hook 层被阻断。如需修正，须使用更新后的配置文件重新运行实验。
-3. **基线获得同等调优预算。** `baseline-engineer` Agent 会拒绝使所提方法获得不公平优势的配置。
+1. **结果文件不可篡改。**（硬阻断）`guard-results` Hook 对任何写入 `experiments/results/` 的操作返回非零退出码。如需修正，须使用更新后的配置文件重新运行实验。
+2. **实验前须锁定评估协议。**（警告 + 日志）若 `experiments/eval-protocol.md` 不存在或未标记为 `LOCKED`，`guard-eval-protocol` Hook 会在任何实验命令执行前发出警告并记录违规。不阻断执行。
+3. **数据收集前须完成 IRB。**（警告 + 日志）若 `research/irb-protocol.md` 不存在，向数据收集路径写入前将触发警告并记录。不阻断执行，因各机构 IRB 时间安排不同。
+4. **基线获得同等调优预算。**（Agent 门控）`baseline-engineer` Agent 会标记使所提方法获得不公平优势的配置，由研究者作最终决定。
+5. **所有条件均须汇报。**（Agent 门控）`lead-researcher` 门控会在批准论文草稿前，核查实验规格中定义的每个条件是否均出现在结果章节。
+6. **研究日志自动维护。**（被动）`log-research-activity` Hook 在每次重要写入后自动追加带时间戳的条目到 `research/research-log.md`。
 4. **研究日志只能追加。** `research/research-log.md` 由 `log-research-activity` Hook 自动写入，不允许事后修改。
-5. **所有条件均须汇报。** 实验规格中定义的每个条件都必须出现在结果章节。`lead-researcher` 评审门控会拒绝遗漏条件的论文。
-6. **数据收集前完成 IRB。** `guard-irb` Hook 会在无 `research/irb-protocol.md` 时，对数据收集路径的任何写入操作给出警告。
-
 ---
 
 ## 仓库结构
@@ -238,10 +252,11 @@ claude
 ```
 .claude/
   agents/          ← 22 个 Agent 定义
-  commands/        ← 37 条斜杠命令
-  hooks/           ← 12 个生命周期 Hook
+  commands/        ← 39 条斜杠命令
+  hooks/           ← 13 个生命周期 Hook
+  scripts/         ← compile_paper.py、export_survey.py
   docs/            ← 文档与模板
-    templates/     ← 实验规格、论文大纲、Sprint 计划
+    templates/     ← hypothesis、research-idea、论文大纲
   rules/           ← 路径专属执行规则
   settings.json    ← Hook 配置
 CLAUDE.md          ← 主配置：范式、领域、框架、目标会议

@@ -45,9 +45,13 @@ has_eval         = exists("experiments/eval-protocol.md")
 eval_locked      = get_status("experiments/eval-protocol.md", "LOCKED")
 has_irb          = exists("research/irb-protocol.md")
 n_specs          = count_files("experiments/specs")
-n_results        = count_files("experiments/results", "") if os.path.isdir("experiments/results") else 0
-n_results       += count_files("experiments/results", ".json")
-n_results       += count_files("experiments/results", ".csv")
+if os.path.isdir("experiments/results"):
+    n_results = len([
+        f for f in os.listdir("experiments/results")
+        if os.path.isfile(os.path.join("experiments/results", f))
+    ])
+else:
+    n_results = 0
 has_outline      = exists("papers/outline.md")
 n_drafts         = count_files("papers/drafts")
 has_run_log      = exists("experiments/run-log.md")

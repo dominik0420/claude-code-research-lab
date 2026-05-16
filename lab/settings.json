@@ -63,11 +63,6 @@
           },
           {
             "type": "command",
-            "command": "bash .claude/hooks/experiment-complete-notify.sh",
-            "description": "Notify when new results files appear in experiments/results/"
-          },
-          {
-            "type": "command",
             "command": "bash .claude/hooks/check-config-yaml.sh",
             "description": "Validate YAML experiment configs have seed, output_dir, and parameters"
           }
@@ -80,6 +75,11 @@
             "type": "command",
             "command": "bash .claude/hooks/capture-git-hash.sh",
             "description": "Log git hash after experiment runs for reproducibility tracing"
+          },
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/experiment-complete-notify.sh",
+            "description": "Detect new result files after experiment runs and suggest next steps"
           }
         ]
       }

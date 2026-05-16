@@ -15,18 +15,24 @@ When working in `src/`, `scripts/`, `tests/`, and `baselines/`:
 All experiment configs live in `experiments/configs/`.
 Naming convention: `[experiment-name]-[condition].yaml`
 
-Required fields in every config:
+Required fields in every config (flat schema, validated automatically by the `check-config-yaml` hook):
 ```yaml
-experiment:
-  name: [experiment-name]
-  condition: [condition-name]
-  seed: [integer]
-  
-output:
-  dir: experiments/results/[experiment-name]-[condition]/
-  
-# ... model, data, training fields specific to the experiment
+name: [experiment-name]
+condition: [condition-name]
+seed: [integer]                      # required for reproducibility
+output_dir: experiments/results/[experiment-name]-[condition]/
+
+# model / training parameters — at least one of:
+model: [architecture-name]
+learning_rate: [float]
+batch_size: [integer]
+num_epochs: [integer]
+
+# ... additional fields specific to the experiment
 ```
+
+The `check-config-yaml` hook validates that `seed`, `output_dir`, and at least one
+model or training parameter are present whenever a config file is written.
 
 ## Model Files (`src/models/`)
 

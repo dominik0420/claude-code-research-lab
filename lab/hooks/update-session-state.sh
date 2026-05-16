@@ -46,6 +46,8 @@ else
     exit 0
 fi
 
+export MILESTONE
+
 # Update session state
 STATE_FILE="production/session-state/active.md"
 mkdir -p "production/session-state"

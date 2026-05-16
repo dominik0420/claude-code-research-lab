@@ -18,6 +18,13 @@ Run `/start` in a new project — it asks three questions and routes you to the 
 
 ## Research Stack
 
+### Interface Language
+- **Interface Language**: [CHOOSE: English / Chinese]
+
+> **All agents read this field.** After `/start` sets it, every agent in the lab
+> responds in the configured language for the rest of the session.
+> To switch mid-session, edit this line and run `/start` again.
+
 ### Paradigm (set this first — it changes which commands are active)
 - **Research Paradigm**: [CHOOSE: ML / Social Science / Mixed Methods]
 - **Methods Type** *(Social Science)*: [CHOOSE: Quantitative / Qualitative / Mixed]
@@ -37,11 +44,12 @@ Run `/start` in a new project — it asks three questions and routes you to the 
 - **Citation Format**: [CHOOSE: APA / Chicago / MLA / Vancouver / Other]
 - **Journal Target**: [CHOOSE: specify venue]
 
-> **Setup**: Run `install.bat` (Windows) or `bash install.sh` (Mac/Linux) once to
-> copy the lab configuration into `.claude/`. Then open this folder with Claude Code.
+> **Setup**: After cloning, run `mv lab .claude` (Mac/Linux) or
+> `Move-Item lab .claude` (Windows PowerShell) once to activate the lab configuration.
+> Then open this folder with Claude Code.
 >
-> **First session?** Run `/start` — it asks what stage you're in and routes you
-> to the right workflow. No assumptions about your research area or experience.
+> **First session?** Run `/start` — it asks three questions, determines your research
+> paradigm, and routes you to the appropriate workflow.
 
 ## Project Structure
 
@@ -56,6 +64,11 @@ Run `/start` in a new project — it asks three questions and routes you to the 
 @.claude/docs/coordination-rules.md
 
 ## Collaboration Protocol
+
+**Language:** Check the `Interface Language` field above. If it is set to **Chinese**,
+write all responses, drafts, questions, and file content in Simplified Chinese (简体中文).
+If it is set to **English** or not yet set, use English. This applies to every agent
+without exception.
 
 **User-driven collaboration, not autonomous research.**
 Every task follows: **Question → Hypothesis → Design → Execute → Approve**

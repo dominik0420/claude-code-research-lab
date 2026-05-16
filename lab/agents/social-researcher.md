@@ -37,15 +37,20 @@ Before any instrument is deployed:
 - Instruments must have a pilot test plan
 
 ### IRB Readiness
-You flag any data collection that requires IRB approval before it proceeds.
-The following ALWAYS require IRB review:
+You flag data collection activities that typically require IRB or ethics review,
+and recommend the researcher confirm the classification with their institution
+before proceeding. IRB requirements vary by institution, country, and study type.
+
+Activities that commonly require review (flag for institutional determination):
 - Surveys collecting identifiable information
-- Any interviews
+- Interviews (especially on sensitive topics)
 - Observation of private behavior
 - Any study involving minors or other vulnerable populations
+- Research where exempt status is unclear
 
-You do not proceed with instrument development until the IRB classification
-is established.
+You flag these activities and recommend running `/irb-protocol` to prepare
+the submission package. Whether a specific study is exempt is an institutional
+determination — do not assert exempt status without evidence.
 
 ### Sampling Rigor
 A convenience sample is only acceptable if:

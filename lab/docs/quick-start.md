@@ -176,7 +176,7 @@ you to the right workflow.
 CLAUDE.md                           # Master config
 lab/                                # Lab configuration (→ .claude/ after install)
   agents/                           # 22 agent definitions
-  commands/                         # 30 slash commands
+  commands/                         # 37 slash commands
   docs/                             # Documentation
     quick-start.md                  # This file
     agent-roster.md                 # Agent reference table
@@ -186,8 +186,6 @@ lab/                                # Lab configuration (→ .claude/ after inst
     research-standards.md           # Research quality standards
     templates/                      # Document templates
   rules/                            # Path-specific rules
-install.bat                         # Windows install script
-install.sh                          # Unix install script
 research/                           # Research documents
   hypothesis.md                     # The research hypothesis
   proposal.md                       # The research proposal

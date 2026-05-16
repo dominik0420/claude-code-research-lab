@@ -3,12 +3,12 @@
 # Claude Code Research Lab
 
 **Turn a single Claude Code session into a full research lab.**  
-22 agents · 37 commands · 12 hooks · ML and Social Science tracks
+22 agents · 39 commands · 13 hooks · ML and Social Science tracks
 
 [![License: MIT](https://img.shields.io/badge/license-MIT-brightgreen?style=flat-square)](LICENSE)
 [![Agents](https://img.shields.io/badge/agents-22-blue?style=flat-square)](.claude/agents/)
-[![Commands](https://img.shields.io/badge/commands-37-blueviolet?style=flat-square)](.claude/commands/)
-[![Hooks](https://img.shields.io/badge/hooks-12-red?style=flat-square)](.claude/hooks/)
+[![Commands](https://img.shields.io/badge/commands-39-blueviolet?style=flat-square)](.claude/commands/)
+[![Hooks](https://img.shields.io/badge/hooks-13-red?style=flat-square)](.claude/hooks/)
 [![Rules](https://img.shields.io/badge/rules-3-orange?style=flat-square)](.claude/rules/)
 [![Tracks](https://img.shields.io/badge/tracks-ML%20%2B%20Social%20Science-teal?style=flat-square)](#two-tracks)
 [![Built for Claude Code](https://img.shields.io/badge/built%20for-Claude%20Code-black?style=flat-square)](https://claude.ai/code)
@@ -33,6 +33,8 @@ claude
 ```
 
 Once inside Claude Code, run `/start`. The onboarding command asks three questions, determines your research paradigm, and routes you to the appropriate workflow. No manual configuration required.
+
+**Hook prerequisites:** The 13 lifecycle hooks require `bash` and `python3` to be available in the shell that Claude Code uses. On Mac and Linux this works out of the box. On Windows, install [Git for Windows](https://git-scm.com/download/win) (provides Git Bash) or use [WSL](https://learn.microsoft.com/en-us/windows/wsl/install) and run Claude Code from within WSL. Without a working `bash`, hooks silently skip — the agents and commands still function normally.
 
 ---
 
@@ -78,6 +80,7 @@ Once inside Claude Code, run `/start`. The onboarding command asks three questio
 |---------|-------------|
 | `/study-design` | Study design: design type, variables, validity threats, IRB flags, analysis plan |
 | `/survey-design` | Questionnaire instrument: item wording, scales, response format, pilot testing plan |
+| `/export-survey [format]` | Export instrument to HTML (shareable), Qualtrics import file, or local Flask data-collection server |
 | `/irb-protocol` | Ethics board submission: risk classification, consent form, data management plan |
 | `/sampling-plan` | Power analysis (quantitative) or saturation strategy (qualitative) with recruitment plan |
 | `/interview-guide` | Semi-structured interview or focus group guide with verbatim scripts and probes |
@@ -104,6 +107,7 @@ Once inside Claude Code, run `/start`. The onboarding command asks three questio
 |---------|-------------|
 | `/outline-paper` | Paper outline — must exist before section drafting begins |
 | `/write-section [section]` | Draft a specific paper section |
+| `/compile-paper [venue]` | Assemble all section drafts into `papers/main.tex` and compile to PDF |
 | `/review-paper` | Simulated peer review panel |
 | `/write-rebuttal` | Author response to reviewer comments |
 | `/camera-ready [venue]` | Final submission checklist for a specific venue |
@@ -159,7 +163,7 @@ Agents are invoked automatically by commands or can be called directly by name.
 
 ## Hooks
 
-12 hooks enforce research integrity automatically throughout the session.
+13 hooks enforce research integrity automatically throughout the session.
 
 | Hook | Event | Behavior |
 |------|-------|----------|
@@ -173,7 +177,8 @@ Agents are invoked automatically by commands or can be called directly by name.
 | `capture-git-hash` | PostToolUse: Bash | Logs git hash and branch to `experiments/run-log.md` after experiment runs |
 | `check-hardcoded-paths` | PostToolUse: Write | Scans Python source files for hardcoded paths, hyperparameters, missing seeds |
 | `track-paper-sections` | PostToolUse: Write | Rebuilds `papers/STATUS.md` with DRAFT / REVIEWED / APPROVED status per section |
-| `experiment-complete-notify` | PostToolUse: Write | Notifies when new results files appear; suggests next commands |
+| `check-config-yaml` | PostToolUse: Write | Validates YAML experiment configs have `seed`, `output_dir`, and model parameters |
+| `experiment-complete-notify` | PostToolUse: Bash | Detects new result files after experiment runs; suggests next analysis commands |
 | `session-summary` | Stop | Prints a full project state checklist at session end |
 
 ---
@@ -196,40 +201,50 @@ Agents are invoked automatically by commands or can be called directly by name.
 /stat-test              → significance tests and effect sizes
 /outline-paper          → argument structure
 /team-writing           → draft all sections
+/compile-paper [venue]  → assemble main.tex, compile to PDF
 /team-review            → simulated peer review panel
 ```
 
 ### Social Science Track
 
 ```
-# Study design and data collection
+# Study design
 /ideate [topic]         → 3 concrete research directions
 /hypothesis             → formalize the research question
 /study-design           → full study design with validity analysis
-/survey-design          → questionnaire instrument
-/interview-guide        → semi-structured interview or focus group guide
 /irb-protocol           → ethics board submission package
 /sampling-plan          → sample size justification and recruitment plan
 
+# Instrument creation
+/survey-design          → questionnaire instrument (items, scales, response format)
+/export-survey [format] → export to HTML (self-hostable), Qualtrics import, or
+                          local Flask data-collection server
+/interview-guide        → semi-structured interview or focus group guide
+
+# Data collection (external — lab produces the instruments)
+#   → Distribute HTML survey link, upload to Qualtrics/Google Forms,
+#     or run the local Flask server for in-person sessions
+#   → Collect responses, export CSV
+
 # Analysis and writing
-/analyze [study]        → run the planned analysis
+/analyze [study]        → run the planned analysis on imported response data
 /stat-test              → regression, reliability measures, significance testing
 /qual-codebook          → qualitative coding scheme with IRR protocol
-/outline-paper → /team-writing → /team-review
+/outline-paper → /team-writing → /compile-paper → /team-review
 ```
 
 ---
 
 ## Research Integrity
 
-The following rules are enforced automatically by hooks and agents. No component in the system can bypass them.
+The following principles are reinforced by hooks and agents throughout the workflow. Enforcement level is noted for each rule.
 
-1. **Evaluation protocol is locked before experiments run.** `/eval-metrics` must exist and be marked `LOCKED` before any experiment command executes.
-2. **Results files are immutable.** Writes to `experiments/results/` are blocked at the hook level. To correct an error, re-run the experiment with an updated config.
-3. **Baselines receive equal tuning budget.** The `baseline-engineer` agent rejects configurations that give the proposed method an unfair advantage.
-4. **Research log is append-only.** `research/research-log.md` is written automatically by the `log-research-activity` hook and is never edited retroactively.
-5. **All conditions are reported.** Every condition defined in an experiment spec must appear in the results section. The `lead-researcher` gate rejects papers that omit conditions.
-6. **IRB precedes data collection.** The `guard-irb` hook warns on any write to data collection paths without `research/irb-protocol.md` present.
+1. **Results files are immutable.** *(Hard block)* The `guard-results` hook rejects any write or edit to `experiments/results/` with a non-zero exit. To correct an error, re-run the experiment with an updated config file.
+2. **Evaluation protocol precedes experiments.** *(Warning + log)* The `guard-eval-protocol` hook warns before any experiment command if `experiments/eval-protocol.md` does not exist or is not marked `LOCKED`, and records the violation in the research log. It does not halt execution.
+3. **IRB precedes data collection.** *(Warning + log)* The `guard-irb` hook warns before writing to data collection paths without `research/irb-protocol.md` present, and logs the event. It does not halt execution, as IRB timing varies by institution.
+4. **Baselines receive equal tuning budget.** *(Agent gate)* The `baseline-engineer` agent flags configurations that appear to give the proposed method an unfair advantage. The researcher makes the final call.
+5. **All conditions are reported.** *(Agent gate)* The `lead-researcher` gate checks that every condition in the experiment spec appears in the results section before approving the paper draft.
+6. **Research log is auto-maintained.** *(Passive)* The `log-research-activity` hook appends timestamped entries to `research/research-log.md` on every significant write. Manual entries are encouraged; the hook ensures the baseline record exists.
 
 ---
 
@@ -238,10 +253,11 @@ The following rules are enforced automatically by hooks and agents. No component
 ```
 .claude/
   agents/          ← 22 agent definitions
-  commands/        ← 37 slash commands
-  hooks/           ← 12 lifecycle hooks
+  commands/        ← 39 slash commands
+  hooks/           ← 13 lifecycle hooks
+  scripts/         ← compile_paper.py, export_survey.py
   docs/            ← guides and templates
-    templates/     ← experiment spec, paper outline, sprint plan
+    templates/     ← hypothesis, research-idea, paper outline
   rules/           ← path-specific enforcement rules
   settings.json    ← hook configuration
 CLAUDE.md          ← master config: paradigm, domain, framework, target venue

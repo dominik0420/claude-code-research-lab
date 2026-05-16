@@ -87,9 +87,12 @@ Sections written: [list]
 Total pages: ~[estimate]
 Missing: [list]
 Known issues: [list from figure review]
-Next: /review-paper for simulated peer review
+Next: /compile-paper [venue] → then /review-paper
 ```
 
 ## Handoff
 
-"First draft complete. Next: Run `/review-paper` to get a simulated review."
+"First draft complete. Next steps in order:
+1. `/compile-paper [venue]` — assemble all drafts into `papers/main.tex` and compile to PDF
+2. `/review-paper`          — simulated peer review of the compiled draft
+3. `/camera-ready [venue]`  — final submission checklist"
