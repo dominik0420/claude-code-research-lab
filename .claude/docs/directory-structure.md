@@ -28,7 +28,7 @@ repo root directly (the original flat layout).
 /
 ├── CLAUDE.md                        # Master config — paradigm, language, active project
 │
-├── .claude/                         # Lab config (activated via: mv lab .claude)
+├── .claude/                         # Lab config (committed directly — no setup needed)
 │   ├── agents/                      # 22 agent definitions
 │   ├── commands/                    # 39 slash command definitions
 │   ├── hooks/                       # 13 lifecycle hooks

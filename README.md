@@ -24,15 +24,10 @@
 ```bash
 git clone https://github.com/YOUR_USERNAME/claude-code-research-lab
 cd claude-code-research-lab
-
-# Activate the lab configuration (one-time)
-mv lab .claude          # Mac / Linux
-Move-Item lab .claude   # Windows PowerShell
-
 claude
 ```
 
-Once inside Claude Code, run `/start`. The onboarding command asks for a project name, sets the interface language, determines your research paradigm, and routes you to the appropriate workflow. No manual configuration required.
+Once inside Claude Code, run `/start`. It asks for a project name, sets the interface language, determines your research paradigm, and routes you to the appropriate workflow. No manual configuration required.
 
 **Project isolation:** `/start` prompts for a project name (e.g. `attention-study`). All output files — hypotheses, experiments, papers, data — go under `[project-name]/` so multiple projects can coexist in one repo without collision. The name is stored in `CLAUDE.md` and every hook reads it automatically. Skip the name to write directly to the repo root.
 

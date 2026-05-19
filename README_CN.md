@@ -24,11 +24,6 @@
 ```bash
 git clone https://github.com/YOUR_USERNAME/claude-code-research-lab
 cd claude-code-research-lab
-
-# 激活实验室配置（仅需一次）
-mv lab .claude          # Mac / Linux
-Move-Item lab .claude   # Windows PowerShell
-
 claude
 ```
 

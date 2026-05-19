@@ -52,12 +52,11 @@ Run `/start` in a new project — it asks three questions and routes you to the 
 - **Citation Format**: [CHOOSE: APA / Chicago / MLA / Vancouver / Other]
 - **Journal Target**: [CHOOSE: specify venue]
 
-> **Setup**: After cloning, run `mv lab .claude` (Mac/Linux) or
-> `Move-Item lab .claude` (Windows PowerShell) once to activate the lab configuration.
-> Then open this folder with Claude Code.
+> **Setup**: Clone the repo, open the folder with Claude Code, and run `/start`.
+> No additional steps required — the lab configuration is already in `.claude/`.
 >
-> **First session?** Run `/start` — it asks three questions, determines your research
-> paradigm, and routes you to the appropriate workflow.
+> **First session?** Run `/start` — it asks for a project name, language, and
+> research paradigm, then routes you to the appropriate workflow.
 
 ## Project Structure
 
