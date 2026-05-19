@@ -10,6 +10,9 @@
 # Lab config lives in .claude/ and IS committed.
 digital-nuwa/
 
+# ------ Agent memory (per-agent, session-specific, never push) ----
+.claude/agent-memory/
+
 # ------ Research outputs (large / regenerated) --------------
 # These patterns catch outputs in ANY project subfolder (*/):
 */data/raw/
