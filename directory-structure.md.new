@@ -1,0 +1,150 @@
+# Directory Structure
+
+## How Projects Are Organized
+
+When you run `/start`, it asks for a **project name**. All output files go under
+`[project-name]/` so multiple projects can coexist in the same repo without
+collision. For example, if your project is `attention-study`:
+
+```
+attention-study/
+├── your-notes.docx      ← drop your own files here (the root is your drop zone)
+├── prior-draft.md       ← the lab reads everything sitting directly here
+├── research/            ← lab-managed: hypotheses, proposals, study designs
+├── experiments/         ← lab-managed: specs, configs, results
+├── papers/              ← lab-managed: drafts, outline, compiled PDF
+└── ...
+```
+
+**The drop zone convention:** anything placed directly in `[project-name]/` — not
+inside a subdirectory — is treated as user-provided input material. The lab reads
+these files on `/start` and uses them to understand where the project is at. All
+lab-managed output goes into subdirectories. This keeps user material and lab
+output cleanly separated.
+
+The active project is stored in `CLAUDE.md` under `Active Project:`. Every hook
+reads this field and prefixes all output paths automatically via `lib.sh`.
+
+If you choose **"Use repo root"** at the project-name prompt, files go to the
+repo root directly (no subfolder). In that case the drop zone is the repo root
+itself, and subdirectories are still lab-managed.
+
+---
+
+## Repo-Level Files
+
+```
+/
+├── CLAUDE.md                        # Master config — paradigm, language, active project
+│
+├── .claude/                         # Lab config (committed directly — no setup needed)
+│   ├── agents/                      # 22 agent definitions
+│   ├── commands/                    # 39 slash command definitions
+│   ├── hooks/                       # 13 lifecycle hooks
+│   │   └── lib.sh                   # Shared path helpers (get_project_dir, ppath, pmkdir)
+│   ├── scripts/                     # compile_paper.py, export_survey.py
+│   ├── docs/                        # Documentation and templates
+│   └── rules/                       # Path-specific rules
+```
+
+---
+
+## Project Output Directory
+
+All paths below are prefixed with `[project-name]/` when `Active Project` is set.
+
+```
+[project-name]/
+│
+├── (your files here)                # Drop zone — user material, read by /start
+│
+├── research/                        # Research documents (lab-managed)
+│   ├── hypothesis.md                # THE research hypothesis (anchor document)
+│   ├── proposal.md                  # Full research proposal
+│   ├── study-design.md              # Social Science: study design
+│   ├── irb-protocol.md              # Social Science: IRB ethics submission
+│   ├── instruments/                 # Survey instruments, interview guides
+│   └── research-log.md              # Running log of decisions and pivots
+│
+├── literature/                      # Literature review (lab-managed)
+│   ├── survey.md                    # Literature survey by theme
+│   ├── gap-analysis.md              # Property matrix and gap statement
+│   ├── bibliography.bib             # BibTeX references
+│   └── papers/                      # Individual paper notes
+│
+├── experiments/                     # Experiment management — ML Track (lab-managed)
+│   ├── eval-protocol.md             # LOCKED evaluation protocol
+│   ├── specs/                       # Experiment specs (one per experiment)
+│   ├── configs/                     # YAML configs (one per experiment run)
+│   ├── results/                     # Experiment outputs — IMMUTABLE (guarded by hook)
+│   ├── run-log.md                   # Git hash log for every run
+│   └── baseline-plan.md             # Baseline comparison plan
+│
+├── src/                             # Research source code (lab-managed)
+│   ├── models/
+│   ├── data/
+│   ├── training/
+│   ├── evaluation/
+│   └── utils/
+│
+├── data/                            # Data files (lab-managed)
+│   ├── raw/                         # Original data (read-only)
+│   └── processed/
+│
+├── baselines/                       # Baseline implementations (lab-managed)
+│
+├── analysis/                        # Analysis scripts and outputs (lab-managed)
+│   ├── figures/
+│   └── outputs/
+│
+├── papers/                          # Paper drafts (lab-managed)
+│   ├── outline.md
+│   ├── STATUS.md                    # Section progress dashboard (auto-updated)
+│   ├── drafts/
+│   ├── main.tex                     # Assembled LaTeX (from /compile-paper)
+│   └── main.pdf                     # Compiled PDF (from /compile-paper)
+│
+└── production/                      # Project management (lab-managed)
+    ├── milestones/
+    ├── sprints/
+    └── session-state/
+        └── active.md                # Recovery point after context loss
+```
+
+---
+
+## Key Files
+
+| File | Owned By | Purpose |
+|------|----------|---------|
+| `[project]/research/hypothesis.md` | `principal-investigator` | THE anchor document |
+| `[project]/experiments/eval-protocol.md` | `lead-researcher` | Locked before experiments |
+| `[project]/papers/outline.md` | `paper-author` | Paper structure |
+| `[project]/production/session-state/active.md` | All | Recovery point after context loss |
+| `[project]/research/research-log.md` | `principal-investigator` | Decision history (append-only) |
+
+---
+
+## Gitignore Recommendations
+
+```gitignore
+# Large data files
+*/data/raw/
+*/data/processed/
+*/experiments/results/
+*/experiments/logs/
+
+# Session state
+*/production/session-state/
+
+# Generated outputs
+*/analysis/outputs/
+
+# Hook state
+.experiment-notify-manifest
+
+# Environment
+*.egg-info/
+__pycache__/
+.env
+```

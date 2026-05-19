@@ -1,0 +1,26 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python *)",
+      "Bash(Select-String -Pattern \"\\\\[OK\\\\]|Error|Traceback|警告\")",
+      "Bash(Select-Object -First 20)",
+      "Read(//c//**)",
+      "Read(//c/Program Files/**)",
+      "PowerShell(Test-Path *)",
+      "PowerShell(Get-ChildItem \"C:\\\\\",\"D:\\\\\" -ErrorAction SilentlyContinue | Where-Object { $_.Name -match \"tex|miktex|latex\" -or $_.Name -match \"Tex\" } | Select-Object FullName)",
+      "PowerShell($env:PATH -split ';' | Where-Object { $_ -imatch \"tex|latex\" })",
+      "PowerShell($allPaths = [System.Environment]::GetEnvironmentVariable\\(\"PATH\",\"Machine\"\\) + \";\" + [System.Environment]::GetEnvironmentVariable\\(\"PATH\",\"User\"\\); $allPaths -split \";\" | Where-Object { $_ -imatch \"tex|mik|latex\" })",
+      "PowerShell(winget install *)",
+      "PowerShell(where.exe xelatex 2>$null; $env:PATH -split \";\" | Where-Object { $_ -imatch \"miktex\" })",
+      "PowerShell(Get-ChildItem \"C:\\\\Program Files\\\\\" -ErrorAction SilentlyContinue | Where-Object { $_.Name -imatch \"mik|tex\" } | Select-Object FullName; Get-ChildItem \"C:\\\\Users\\\\Administrator\\\\\" -ErrorAction SilentlyContinue | Where-Object { $_.Name -imatch \"mik|tex\" } | Select-Object FullName)",
+      "PowerShell(winget list *)",
+      "PowerShell($allPaths = \\([System.Environment]::GetEnvironmentVariable\\(\"PATH\",\"Machine\"\\) + \";\" + [System.Environment]::GetEnvironmentVariable\\(\"PATH\",\"User\"\\)\\) -split \";\"; $allPaths | Where-Object { $_ -ne \"\" } | Select-Object -First 30、)",
+      "PowerShell(& \"C:\\\\Users\\\\Administrator\\\\AppData\\\\Local\\\\Programs\\\\MiKTeX\\\\miktex\\\\bin\\\\x64\\\\xelatex.exe\" --version 2>&1 | Select-Object -First 3)",
+      "PowerShell($xelatex = \"C:\\\\Users\\\\Administrator\\\\AppData\\\\Local\\\\Programs\\\\MiKTeX\\\\miktex\\\\bin\\\\x64\\\\xelatex.exe\"; cd \"D:\\\\claude-code-research-lab\\\\digital-nuwa\\\\papers\"; & $xelatex --interaction=nonstopmode --enable-installer main.tex 2>&1 | Select-Object -Last 30)",
+      "PowerShell($py = \"C:\\\\Users\\\\Administrator\\\\AppData\\\\Local\\\\Programs\\\\Python\\\\Python312\\\\python.exe\"; cd \"D:\\\\claude-code-research-lab\"; & $py digital-nuwa/papers/assemble.py)",
+      "PowerShell($xelatex = \"C:\\\\Users\\\\Administrator\\\\AppData\\\\Local\\\\Programs\\\\MiKTeX\\\\miktex\\\\bin\\\\x64\\\\xelatex.exe\"; cd \"D:\\\\claude-code-research-lab\\\\digital-nuwa\\\\papers\"; & $xelatex --interaction=nonstopmode --enable-installer main.tex 2>&1 | Select-Object -Last 40)",
+      "PowerShell($xelatex = \"C:\\\\Users\\\\Administrator\\\\AppData\\\\Local\\\\Programs\\\\MiKTeX\\\\miktex\\\\bin\\\\x64\\\\xelatex.exe\"; cd \"D:\\\\claude-code-research-lab\\\\digital-nuwa\\\\papers\"; & $xelatex --interaction=nonstopmode --enable-installer main.tex 2>&1 | Select-Object -Last 15)",
+      "PowerShell(Test-Path \"D:\\\\claude-code-research-lab\\\\digital-nuwa\\\\papers\\\\main.pdf\"; \\(Get-Item \"D:\\\\claude-code-research-lab\\\\digital-nuwa\\\\papers\\\\main.pdf\"\\).Length)"
+    ]
+  }
+}

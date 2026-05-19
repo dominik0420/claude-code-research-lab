@@ -4,13 +4,25 @@
 # The .claude/ directory IS committed — it's the lab config.
 # Everything below is generated output that should NOT be committed.
 
+# ------ User project directories (auto-added by /start) -----
+# Each project created with /start is appended below.
+# These are personal research outputs — not lab config.
+# Lab config lives in .claude/ and IS committed.
+digital-nuwa/
+
 # ------ Research outputs (large / regenerated) --------------
+# These patterns catch outputs in ANY project subfolder (*/):
+*/data/raw/
+*/data/processed/
+*/experiments/results/
+*/experiments/logs/
+*/analysis/outputs/
+*/production/session-state/
+# Also catch root-level (when using repo root as project):
 data/raw/
 data/processed/
 experiments/results/
 analysis/outputs/
-
-# ------ Session state (machine-specific, auto-generated) ----
 production/session-state/
 
 # ------ Python --------------------------------------------

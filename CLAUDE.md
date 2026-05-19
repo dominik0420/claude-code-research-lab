@@ -19,7 +19,7 @@ Run `/start` in a new project — it asks three questions and routes you to the 
 ## Research Stack
 
 ### Active Project
-- **Active Project**: [CHOOSE: project-name]
+- **Active Project**: *(run `/start` to set)*
 
 > **All hooks and agents read this field.** When set, every output file
 > (hypotheses, experiments, results, papers, analysis) is written under
@@ -27,15 +27,14 @@ Run `/start` in a new project — it asks three questions and routes you to the 
 > Set this in `/start` — change it any time to switch projects.
 
 ### Interface Language
-- **Interface Language**: [CHOOSE: English / Chinese]
+- **Interface Language**: *(run `/start` to set)*
 
 > **All agents read this field.** After `/start` sets it, every agent in the lab
 > responds in the configured language for the rest of the session.
 > To switch mid-session, edit this line and run `/start` again.
 
 ### Paradigm (set this first — it changes which commands are active)
-- **Research Paradigm**: [CHOOSE: ML / Social Science / Mixed Methods]
-- **Methods Type** *(Social Science)*: [CHOOSE: Quantitative / Qualitative / Mixed]
+- **Research Paradigm**: *(run `/start` to set)*
 
 ### ML Track
 - **Domain**: [CHOOSE: NLP / CV / RL / Multimodal / Systems / Theory / Other]

@@ -1,0 +1,149 @@
+---
+name: start
+description: "First-session onboarding. Run this when you open a new research project. Selects interface language, sets project name, runs a decision tree to detect the research paradigm (ML vs. Social Science vs. Mixed), reads existing project state, then immediately executes the next step — does not stop and ask the user to type a command."
+argument-hint: "[optional: brief description of the project]"
+user-invocable: true
+allowed-tools: Read, Glob, Grep, Write, WebSearch
+---
+
+You are the onboarding agent for a Claude Code Research Lab session.
+
+**Critical behavior:** this command does not end with a recommendation. It ends
+by executing the next step. After onboarding is complete, you read the next
+command's file and run it immediately. The user should never have to type another
+command after `/start`.
+
+---
+
+## Phase 1 — Language Selection
+
+Check `CLAUDE.md` for `Interface Language`.
+
+- Already set → use it, skip this phase.
+- Not set → `AskUserQuestion`:
+
+  > "Please select your preferred language. / 请选择界面语言。"
+  > - **English**
+  > - **中文**
+
+  Write the choice to `CLAUDE.md`. Switch your output language immediately.
+  All output from this point forward must be in the chosen language.
+
+---
+
+## Phase 2 — Project Name
+
+Check `CLAUDE.md` for `Active Project`.
+
+- Already set → skip this phase.
+- Not set → `AskUserQuestion`:
+
+  > EN: "What is the name of this research project?"
+  > ZH: "这个研究项目的名称是什么？"
+  > - **Enter a name** (e.g. `attention-study`)
+  > - **Use repo root**
+
+  If a name is given, sanitize it (lowercase, hyphens), write to `CLAUDE.md`,
+  and create the scaffold:
+  ```
+  <name>/research/          <name>/experiments/specs/
+  <name>/literature/papers/ <name>/experiments/configs/
+  <name>/src/               <name>/experiments/results/
+  <name>/data/raw/          <name>/analysis/
+  <name>/data/processed/    <name>/papers/drafts/
+  <name>/production/session-state/
+  ```
+  Write `<name>/research/research-log.md` and
+  `<name>/production/session-state/active.md` if they don't exist.
+
+  **Gitignore:** After creating the scaffold, append the project name to
+  `.gitignore` so personal research outputs are never accidentally committed.
+  Read the current `.gitignore`, then write it back with `<name>/` added under
+  the `# User project directories` section (do not duplicate if already present):
+  ```
+  # ------ User project directories (auto-added by /start) -----
+  <name>/
+  ```
+
+---
+
+## Phase 3 — Read User Material
+
+Files directly in `<name>/` (not in subdirs) are user-provided input.
+Subdirectories are lab-managed output. This is the convention.
+
+1. `Glob <name>/*` — single level only.
+2. Read every file found at that level (`.docx`, `.md`, `.txt`, `.pdf`, anything).
+3. Build a picture of the project: topic, stage, key findings already present.
+4. If files were found, confirm in 1–2 sentences what you understood from them.
+
+---
+
+## Phase 4 — Paradigm Detection
+
+Check `CLAUDE.md` for `Research Paradigm`. Already set → skip.
+
+If Phase 3 material makes the paradigm obvious, skip the questions and use it.
+Otherwise ask with `AskUserQuestion`:
+
+**Q1:** Does the research involve training/fine-tuning/benchmarking ML models?
+- Yes → ML Track
+- No/unsure → Q2
+
+**Q2:** Does it involve collecting data from people (surveys, interviews, observations)?
+- Yes → Q3
+- No → ML Track (computational/theoretical)
+
+**Q3:** What kind of data and analysis?
+- Surveys / structured → statistics → Social Science Quantitative
+- Interviews / observations → themes → Social Science Qualitative
+- Both → Mixed Methods
+- ML on social data → Mixed Methods (Computational Social Science)
+
+Write the paradigm to `CLAUDE.md` and `<name>/production/session-state/active.md`.
+
+---
+
+## Phase 5 — Execute the Next Step
+
+Determine the current stage from what exists in the project:
+
+| ML Track | Social Science Track | Next command |
+|----------|---------------------|-------------|
+| Nothing | Nothing | `ideate` |
+| Notes / user material in drop zone | Notes / user material | `hypothesis` |
+| hypothesis.md exists | hypothesis.md exists | `lit-review` |
+| literature/survey.md exists | literature/survey.md | ML: `eval-metrics` · SS: `study-design` |
+| eval-protocol.md | study-design.md | ML: `experiment-design` · SS: `survey-design` or `interview-guide` |
+| experiments/specs/ has files | instruments exist | ML: `implement` · SS: `export-survey` |
+| experiments/results/ has files | data collected | `analyze` |
+| analysis exists | analysis exists | `outline-paper` |
+| papers/outline.md | papers/outline.md | `team-writing` |
+| papers/drafts/ has files | papers/drafts/ has files | `compile-paper` |
+
+**User material found in the drop zone counts as "Notes / user material" even if
+no formal `hypothesis.md` exists yet.**
+
+### Now execute — do not stop
+
+Print exactly one line:
+> EN: "── `<name>` · [PARADIGM] · starting /[command] ──"
+> ZH: "── `<name>` · [范式] · 进入 /[command] ──"
+
+Then use `Read` to load `.claude/commands/<command>.md` and execute those
+instructions immediately, treating this as a seamless continuation of the
+current session. Do not explain what you are about to do. Do not ask the user
+if they want to proceed. Just run it.
+
+**The one exception:** `/team-experiments`, `/team-writing`, `/team-review` are
+long multi-agent pipelines — ask for confirmation before launching those.
+
+---
+
+## Risk check
+
+After the next command finishes (not before, not instead of), note at most one
+critical issue if present:
+- ML: results exist but eval protocol not locked
+- Social Science: data collection planned but no IRB
+- Either: results exist but no statistical analysis
