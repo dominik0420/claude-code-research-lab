@@ -58,6 +58,49 @@ After the user responds, immediately:
    - Write `Active Project: ` (empty value — a blank string after the colon) to
      `CLAUDE.md` so `get_project_dir()` returns empty and hooks use repo root.
 
+Then immediately ask **Phase 0a.5 — Import or Fresh Start** (still bilingual):
+
+> "Are you starting fresh, or do you have existing files to bring in?
+> / 这是全新项目，还是你有已有文件想导入？"
+>
+> Options:
+> - **Fresh start** — I'll begin from scratch with the lab's workflow
+> - **I have existing files** — Drop my files in and have the lab pick up from there
+
+**If "I have existing files" is chosen:**
+
+1. Tell the user (in whichever language they've indicated, defaulting to bilingual
+   since language may not be set yet):
+   > "The project folder `<name>/` is ready. Drop your files into the appropriate
+   > subdirectories, then come back and type **done** (or just press Enter).
+   >
+   > Where things go:
+   > - Notes, ideas, prior write-ups → `<name>/research/`
+   > - Papers you've read → `<name>/literature/papers/`
+   > - Data files → `<name>/data/raw/`
+   > - Existing code → `<name>/src/`
+   > - Draft sections → `<name>/papers/drafts/`
+   > - Anything you're unsure about → just drop it in `<name>/` and I'll sort it out"
+
+2. **Wait** — do not proceed. The user needs time to copy files. When they
+   confirm (any response: "done", "ready", "ok", Enter, etc.), continue to
+   Phase 0b.
+
+3. After they confirm, **silently scan the project folder** before continuing:
+   - Use `Glob` to list all files under `<name>/`
+   - Use `Read` on any recognizable documents (hypothesis, proposal, notes,
+     drafts, data README, code files) to understand what exists
+   - Build a mental model: What stage is this work at? What's missing?
+   - Note any files that don't fit the standard structure (dropped in root, wrong
+     folder, unusual format) — mention them briefly after routing so the user
+     knows they were seen
+
+   This scan replaces Phase 1 — skip the normal empty-folder check and go
+   directly to Phase 2 (paradigm), **but** pre-fill your Phase 3 routing based
+   on what you actually found rather than assuming a clean slate.
+
+**If "Fresh start" is chosen:** proceed normally to Phase 0b.
+
 ---
 
 ## Phase 0b — Language Selection
@@ -103,6 +146,9 @@ Silently check for existing project artifacts. If `Active Project` is set to
 - [project]/experiments/results/     → are there results?
 - [project]/papers/                  → is there a draft?
 ```
+
+Skip this phase entirely if the user chose "I have existing files" in Phase 0a.5
+(the post-import scan already covered it).
 
 If `CLAUDE.md` already has `Research Paradigm` set to ML, Social Science, or
 Mixed Methods, **skip Phase 2** and go straight to Phase 3 using that paradigm.
@@ -215,6 +261,10 @@ After routing, flag one critical issue if present (in the interface language):
 - **Social Science**: Data collection planned without IRB documentation
 - **Either**: No sprint plan but a known submission deadline
 - **Either**: Results exist but no statistical analysis
+
+If the user imported existing files, also note any files found outside the
+expected folder structure, so they know those files were seen and can move
+them if needed.
 
 ---
 
