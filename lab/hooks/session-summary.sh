@@ -4,19 +4,30 @@
 # project state so the researcher knows exactly where they left off.
 # Also useful for catching the most common "forgot to do X" errors.
 
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "$SCRIPT_DIR/lib.sh"
+
+export PDIR=$(get_project_dir)
+
 python3 - <<'PYEOF'
 import os, datetime, sys
 
-def exists(path):
-    return os.path.exists(path)
+pdir = os.environ.get("PDIR", "")
+def ppath(rel):
+    return os.path.join(pdir, rel) if pdir else rel
 
-def count_files(directory, extension=".md"):
-    if not os.path.isdir(directory):
+def exists(rel):
+    return os.path.exists(ppath(rel))
+
+def count_files(rel, extension=".md"):
+    path = ppath(rel)
+    if not os.path.isdir(path):
         return 0
-    return len([f for f in os.listdir(directory) if f.endswith(extension)])
+    return len([f for f in os.listdir(path) if f.endswith(extension)])
 
-def get_status(path, keyword="LOCKED"):
-    if not exists(path):
+def get_status(rel, keyword="LOCKED"):
+    path = ppath(rel)
+    if not os.path.exists(path):
         return None
     try:
         with open(path, "r", encoding="utf-8", errors="ignore") as f:
@@ -27,7 +38,8 @@ def get_status(path, keyword="LOCKED"):
 
 # ── Collect state ──────────────────────────────────────────────────────────
 paradigm = "Unknown"
-if exists("CLAUDE.md"):
+project_name = pdir if pdir else "(repo root)"
+if os.path.exists("CLAUDE.md"):
     try:
         with open("CLAUDE.md", "r", encoding="utf-8") as f:
             for line in f:
@@ -45,16 +57,19 @@ has_eval         = exists("experiments/eval-protocol.md")
 eval_locked      = get_status("experiments/eval-protocol.md", "LOCKED")
 has_irb          = exists("research/irb-protocol.md")
 n_specs          = count_files("experiments/specs")
-if os.path.isdir("experiments/results"):
+
+results_path = ppath("experiments/results")
+if os.path.isdir(results_path):
     n_results = len([
-        f for f in os.listdir("experiments/results")
-        if os.path.isfile(os.path.join("experiments/results", f))
+        f for f in os.listdir(results_path)
+        if os.path.isfile(os.path.join(results_path, f))
     ])
 else:
     n_results = 0
-has_outline      = exists("papers/outline.md")
-n_drafts         = count_files("papers/drafts")
-has_run_log      = exists("experiments/run-log.md")
+
+has_outline  = exists("papers/outline.md")
+n_drafts     = count_files("papers/drafts")
+has_run_log  = exists("experiments/run-log.md")
 
 # ── Print summary ──────────────────────────────────────────────────────────
 BORDER = "═" * 54
@@ -63,6 +78,7 @@ print(f"║  📋 Session Summary — {datetime.datetime.now().strftime('%Y-%m-%
 print(f"╚{BORDER}╝", file=sys.stderr)
 print("", file=sys.stderr)
 
+print(f"  Project:  {project_name}", file=sys.stderr)
 print(f"  Paradigm: {paradigm}", file=sys.stderr)
 print("", file=sys.stderr)
 

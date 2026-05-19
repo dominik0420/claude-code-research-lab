@@ -4,6 +4,9 @@
 # a significant research file is written. Keeps the log current without
 # requiring the researcher to remember to write to it manually.
 
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "$SCRIPT_DIR/lib.sh"
+
 INPUT=$(cat)
 
 FILE_PATH=$(echo "$INPUT" | python3 -c "
@@ -40,11 +43,11 @@ if [ "$SIGNIFICANT" = false ]; then
     exit 0
 fi
 
-LOGFILE="research/research-log.md"
+LOGFILE=$(ppath "research/research-log.md")
 
 # Create log file if it doesn't exist
 if [ ! -f "$LOGFILE" ]; then
-    mkdir -p research
+    pmkdir "research/research-log.md"
     echo "# Research Log" > "$LOGFILE"
     echo "" >> "$LOGFILE"
     echo "All significant file writes are logged here automatically." >> "$LOGFILE"

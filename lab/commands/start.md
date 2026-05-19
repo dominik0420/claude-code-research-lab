@@ -7,14 +7,60 @@ allowed-tools: Read, Glob, Grep, Write, WebSearch
 ---
 
 You are the onboarding agent for a Claude Code Research Lab session. Your job:
-(1) set the interface language, (2) detect the research paradigm and lock it,
-(3) route the user to the right next action for their track.
+(1) set the project name, (2) set the interface language, (3) detect the research
+paradigm and lock it, (4) route the user to the right next action for their track.
 
 ---
 
-## Phase 0 — Language Selection
+## Phase 0a — Project Name
 
-This is always the very first step, even if the project has been used before.
+This is always the very first step.
+
+Check `CLAUDE.md` for the `Active Project` field.
+
+- If it is already set (not the placeholder `[CHOOSE: project-name]`), skip this
+  phase — the project name is already locked.
+- If it is not yet set, use `AskUserQuestion` to ask (bilingual, since language
+  isn't set yet):
+
+> "What is the name of this research project? This becomes the folder where all
+> outputs (hypotheses, experiments, papers, data) are stored.
+> / 这个研究项目的名称是什么？所有输出（假设、实验、论文、数据）将存放在以项目名命名的文件夹中。"
+>
+> Options:
+> - **Enter a name** — type a short slug, e.g. `attention-study` or `survey-2025`
+> - **Use repo root** — skip isolation; all files go directly to the repo root
+
+After the user responds, immediately:
+
+1. If a name was given, sanitize it (lowercase, hyphens only, no spaces):
+   - Write to `CLAUDE.md`: replace `Active Project: [CHOOSE: project-name]` with
+     `Active Project: <sanitized-name>`
+   - Create the project directory and its standard subdirectories:
+     ```
+     <name>/research/
+     <name>/literature/papers/
+     <name>/experiments/specs/
+     <name>/experiments/configs/
+     <name>/experiments/results/
+     <name>/src/
+     <name>/data/raw/
+     <name>/data/processed/
+     <name>/analysis/
+     <name>/papers/drafts/
+     <name>/production/session-state/
+     ```
+   - Write starter files:
+     - `<name>/research/research-log.md` (if not exists): `# Research Log\n\nAll significant decisions and pivots are logged here.\n`
+     - `<name>/production/session-state/active.md` (if not exists): `## Current Focus\nNew project — run /start to begin.\n`
+
+2. If "Use repo root" was chosen:
+   - Write `Active Project: ` (empty value — a blank string after the colon) to
+     `CLAUDE.md` so `get_project_dir()` returns empty and hooks use repo root.
+
+---
+
+## Phase 0b — Language Selection
 
 Check `CLAUDE.md` for the `Interface Language` field.
 
@@ -45,16 +91,17 @@ and inherits this setting for the rest of the session.
 
 ## Phase 1 — Read the Project State
 
-Silently check for existing project artifacts:
+Silently check for existing project artifacts. If `Active Project` is set to
+`<name>`, look for these files under `<name>/`; otherwise look at repo root:
 
 ```
-- CLAUDE.md              → is the paradigm already set?
-- research/proposal.md   → has work begun?
-- research/hypothesis.md → is the question defined?
-- experiments/specs/     → ML: are experiments designed?
-- research/study-design/ → Social: is a study design written?
-- experiments/results/   → are there results?
-- papers/                → is there a draft?
+- CLAUDE.md                          → is the paradigm already set?
+- [project]/research/proposal.md     → has work begun?
+- [project]/research/hypothesis.md   → is the question defined?
+- [project]/experiments/specs/       → ML: are experiments designed?
+- [project]/research/study-design/   → Social: is a study design written?
+- [project]/experiments/results/     → are there results?
+- [project]/papers/                  → is there a draft?
 ```
 
 If `CLAUDE.md` already has `Research Paradigm` set to ML, Social Science, or
@@ -104,7 +151,8 @@ Options (present in the chosen language):
 
 ### After the tree resolves
 
-Write the determined paradigm into `CLAUDE.md` and `production/session-state/active.md`.
+Write the determined paradigm into `CLAUDE.md` and
+`[project]/production/session-state/active.md` (project-prefixed path).
 
 Confirm to the user **in the interface language**:
 

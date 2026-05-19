@@ -4,6 +4,9 @@
 # required fields are present. Outputs warnings for any missing fields.
 # Does not block — specs can be iteratively completed.
 
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "$SCRIPT_DIR/lib.sh"
+
 INPUT=$(cat)
 
 FILE_PATH=$(echo "$INPUT" | python3 -c "
@@ -66,8 +69,8 @@ echo "A complete spec is required before /implement or /team-experiments." >&2
 echo "See .claude/docs/templates/experiment-spec.md for the full template." >&2
 echo "" >&2
 
-# Log the incomplete spec
-LOGFILE="research/research-log.md"
+# Log the incomplete spec (project-aware path)
+LOGFILE=$(ppath "research/research-log.md")
 if [ -f "$LOGFILE" ]; then
     echo "" >> "$LOGFILE"
     echo "### $(date '+%Y-%m-%d %H:%M') — ⚠️ Incomplete spec: $(basename $FILE_PATH)" >> "$LOGFILE"

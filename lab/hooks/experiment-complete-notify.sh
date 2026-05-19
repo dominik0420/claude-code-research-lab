@@ -5,6 +5,9 @@
 # Uses a lightweight manifest file to track what was known before.
 # This hook intentionally exits 0 always — it is advisory only.
 
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "$SCRIPT_DIR/lib.sh"
+
 INPUT=$(cat)
 
 # Only check if the bash command looks experiment-related
@@ -22,7 +25,8 @@ if ! echo "$COMMAND" | grep -qiE "(python|train|run|experiment|eval|test|bash)";
     exit 0
 fi
 
-RESULTS_DIR="experiments/results"
+RESULTS_DIR=$(ppath "experiments/results")
+LOGFILE=$(ppath "research/research-log.md")
 MANIFEST=".experiment-notify-manifest"
 
 if [ ! -d "$RESULTS_DIR" ]; then
@@ -71,7 +75,6 @@ while IFS= read -r NEW_FILE; do
     echo "" >&2
 
     # Log to research log if it exists
-    LOGFILE="research/research-log.md"
     if [ -f "$LOGFILE" ]; then
         echo "" >> "$LOGFILE"
         echo "### $(date '+%Y-%m-%d %H:%M') — New result detected: $NEW_FILE" >> "$LOGFILE"

@@ -18,6 +18,14 @@ Run `/start` in a new project — it asks three questions and routes you to the 
 
 ## Research Stack
 
+### Active Project
+- **Active Project**: [CHOOSE: project-name]
+
+> **All hooks and agents read this field.** When set, every output file
+> (hypotheses, experiments, results, papers, analysis) is written under
+> `[project-name]/` so multiple projects can coexist in the same repo root.
+> Set this in `/start` — change it any time to switch projects.
+
 ### Interface Language
 - **Interface Language**: [CHOOSE: English / Chinese]
 

@@ -4,6 +4,9 @@
 # Does NOT block — exits 0 after warning, so the researcher can override.
 # A blocked experiment run is worse than a warned one.
 
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "$SCRIPT_DIR/lib.sh"
+
 INPUT=$(cat)
 
 COMMAND=$(echo "$INPUT" | python3 -c "
@@ -22,13 +25,14 @@ if ! echo "$COMMAND" | grep -qE "(python|python3).*(train|run|experiment|main|ev
 fi
 
 # Check if eval protocol exists and is locked
-PROTOCOL="experiments/eval-protocol.md"
+PROTOCOL=$(ppath "experiments/eval-protocol.md")
+LOGFILE=$(ppath "research/research-log.md")
 
 if [ ! -f "$PROTOCOL" ]; then
     echo "" >&2
     echo "⚠️  WARNING — No evaluation protocol found" >&2
     echo "" >&2
-    echo "You are about to run an experiment but experiments/eval-protocol.md" >&2
+    echo "You are about to run an experiment but $PROTOCOL" >&2
     echo "does not exist." >&2
     echo "" >&2
     echo "Running experiments without a locked eval protocol risks:" >&2
@@ -41,7 +45,6 @@ if [ ! -f "$PROTOCOL" ]; then
     echo "" >&2
 
     # Log the warning
-    LOGFILE="research/research-log.md"
     if [ -f "$LOGFILE" ]; then
         echo "" >> "$LOGFILE"
         echo "## ⚠️ WARNING $(date '+%Y-%m-%d %H:%M') — Experiment run without eval protocol" >> "$LOGFILE"

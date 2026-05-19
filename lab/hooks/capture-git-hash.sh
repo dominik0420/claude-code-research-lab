@@ -4,6 +4,9 @@
 # logs it alongside the command. This ensures every result is traceable
 # to a specific code commit — required for reproducibility.
 
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "$SCRIPT_DIR/lib.sh"
+
 INPUT=$(cat)
 
 COMMAND=$(echo "$INPUT" | python3 -c "
@@ -39,9 +42,9 @@ if [ -n "$GIT_STATUS" ]; then
     echo "   git add -A && git commit -m 'Pre-experiment checkpoint'" >&2
 fi
 
-# Log to experiment run log
-RUNLOG="experiments/run-log.md"
-mkdir -p experiments
+# Log to experiment run log (project-aware path)
+RUNLOG=$(ppath "experiments/run-log.md")
+pmkdir "experiments/run-log.md"
 
 if [ ! -f "$RUNLOG" ]; then
     echo "# Experiment Run Log" > "$RUNLOG"

@@ -32,7 +32,9 @@ Move-Item lab .claude   # Windows PowerShell
 claude
 ```
 
-Once inside Claude Code, run `/start`. The onboarding command asks three questions, determines your research paradigm, and routes you to the appropriate workflow. No manual configuration required.
+Once inside Claude Code, run `/start`. The onboarding command asks for a project name, sets the interface language, determines your research paradigm, and routes you to the appropriate workflow. No manual configuration required.
+
+**Project isolation:** `/start` prompts for a project name (e.g. `attention-study`). All output files — hypotheses, experiments, papers, data — go under `[project-name]/` so multiple projects can coexist in one repo without collision. The name is stored in `CLAUDE.md` and every hook reads it automatically. Skip the name to write directly to the repo root.
 
 **Hook prerequisites:** The 13 lifecycle hooks require `bash` and `python3` to be available in the shell that Claude Code uses. On Mac and Linux this works out of the box. On Windows, install [Git for Windows](https://git-scm.com/download/win) (provides Git Bash) or use [WSL](https://learn.microsoft.com/en-us/windows/wsl/install) and run Claude Code from within WSL. Without a working `bash`, hooks silently skip — the agents and commands still function normally.
 

@@ -32,7 +32,9 @@ Move-Item lab .claude   # Windows PowerShell
 claude
 ```
 
-进入 Claude Code 后，运行 `/start`。该命令通过三个问题判断研究范式，并将你引导至对应的工作流程，无需手动配置。
+进入 Claude Code 后，运行 `/start`。该命令会询问项目名称、界面语言、研究范式，并将你引导至对应的工作流程，无需手动配置。
+
+**项目隔离：** `/start` 会提示输入项目名称（如 `attention-study`）。所有输出文件——假设、实验、论文、数据——均存放于 `[project-name]/` 目录下，多个项目可在同一仓库中共存互不干扰。项目名称保存在 `CLAUDE.md` 中，所有 Hook 自动读取。若跳过项目名称，文件将直接写入仓库根目录。
 
 **Hook 前置条件：** 13 个生命周期 Hook 需要在 Claude Code 使用的 shell 中能够调用 `bash` 和 `python3`。Mac 和 Linux 用户开箱即用；Windows 用户请安装 [Git for Windows](https://git-scm.com/download/win)（提供 Git Bash），或使用 [WSL](https://learn.microsoft.com/zh-cn/windows/wsl/install) 并在 WSL 内运行 Claude Code。若 `bash` 不可用，Hook 会静默跳过——Agent 和命令功能不受影响。
 

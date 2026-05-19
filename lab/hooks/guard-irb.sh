@@ -4,6 +4,9 @@
 # Social Science Track only — silently passes for ML-only projects.
 # Does NOT block — IRB timing varies by institution. Warns and logs.
 
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "$SCRIPT_DIR/lib.sh"
+
 INPUT=$(cat)
 
 FILE_PATH=$(echo "$INPUT" | python3 -c "
@@ -29,8 +32,9 @@ if [ -f "$CLAUDE_MD" ]; then
     fi
 fi
 
-# Check if IRB protocol exists
-IRB_PROTOCOL="research/irb-protocol.md"
+# Check if IRB protocol exists (project-aware path)
+IRB_PROTOCOL=$(ppath "research/irb-protocol.md")
+LOGFILE=$(ppath "research/research-log.md")
 
 if [ ! -f "$IRB_PROTOCOL" ]; then
     echo "" >&2
@@ -47,7 +51,6 @@ if [ ! -f "$IRB_PROTOCOL" ]; then
     echo "Proceeding — but this warning is logged." >&2
     echo "" >&2
 
-    LOGFILE="research/research-log.md"
     if [ -f "$LOGFILE" ]; then
         echo "" >> "$LOGFILE"
         echo "## ⚠️ WARNING $(date '+%Y-%m-%d %H:%M') — Data write without IRB protocol" >> "$LOGFILE"

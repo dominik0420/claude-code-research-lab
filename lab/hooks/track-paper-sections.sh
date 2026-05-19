@@ -4,6 +4,9 @@
 # line of each section file and updates papers/STATUS.md with a dashboard.
 # Status format in draft files: <!-- Status: DRAFT / REVIEWED / APPROVED -->
 
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "$SCRIPT_DIR/lib.sh"
+
 INPUT=$(cat)
 
 FILE_PATH=$(echo "$INPUT" | python3 -c "
@@ -20,12 +23,19 @@ if ! echo "$FILE_PATH" | grep -q "papers/drafts/"; then
     exit 0
 fi
 
+# Export project dir for Python
+export PDIR=$(get_project_dir)
+
 # Rebuild the full status dashboard
 python3 - <<'PYEOF'
-import os, re, datetime
+import os, re, datetime, sys
 
-DRAFTS_DIR = "papers/drafts"
-STATUS_FILE = "papers/STATUS.md"
+pdir = os.environ.get("PDIR", "")
+def ppath(rel):
+    return os.path.join(pdir, rel) if pdir else rel
+
+DRAFTS_DIR = ppath("papers/drafts")
+STATUS_FILE = ppath("papers/STATUS.md")
 
 SECTION_ORDER = [
     "abstract", "introduction", "related-work", "method",
@@ -95,10 +105,11 @@ lines += [
     "```",
 ]
 
+os.makedirs(os.path.dirname(STATUS_FILE), exist_ok=True)
 with open(STATUS_FILE, "w") as f:
     f.write("\n".join(lines) + "\n")
 
-print(f"📄 Paper status updated: {approved}/{total} sections approved", file=__import__('sys').stderr)
+print(f"📄 Paper status updated: {approved}/{total} sections approved", file=sys.stderr)
 PYEOF
 
 exit 0

@@ -4,6 +4,9 @@
 # This is the recovery file — if context is lost, /start reads this to
 # understand where the project stands.
 
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "$SCRIPT_DIR/lib.sh"
+
 INPUT=$(cat)
 
 FILE_PATH=$(echo "$INPUT" | python3 -c "
@@ -47,43 +50,50 @@ else
 fi
 
 export MILESTONE
+export PDIR=$(get_project_dir)
 
-# Update session state
-STATE_FILE="production/session-state/active.md"
-mkdir -p "production/session-state"
+# Update session state (project-aware path)
+STATE_FILE=$(ppath "production/session-state/active.md")
+pmkdir "production/session-state/active.md"
 
 # Build a snapshot of what exists
 python3 - <<'PYEOF'
 import os, datetime
 
-state_file = "production/session-state/active.md"
+pdir = os.environ.get("PDIR", "")
+def ppath(rel):
+    return os.path.join(pdir, rel) if pdir else rel
+
+state_file = ppath("production/session-state/active.md")
 milestone = os.environ.get("MILESTONE", "")
 
 # Discover what exists
 checks = {
-    "Hypothesis": "research/hypothesis.md",
-    "Proposal": "research/proposal.md",
-    "Study design": "research/study-design.md",
-    "Eval protocol": "experiments/eval-protocol.md",
-    "IRB protocol": "research/irb-protocol.md",
-    "Lit survey": "literature/survey.md",
-    "Paper outline": "papers/outline.md",
+    "Hypothesis":    ppath("research/hypothesis.md"),
+    "Proposal":      ppath("research/proposal.md"),
+    "Study design":  ppath("research/study-design.md"),
+    "Eval protocol": ppath("experiments/eval-protocol.md"),
+    "IRB protocol":  ppath("research/irb-protocol.md"),
+    "Lit survey":    ppath("literature/survey.md"),
+    "Paper outline": ppath("papers/outline.md"),
 }
 
 # Check experiment specs
 specs = []
-if os.path.isdir("experiments/specs"):
-    specs = [f for f in os.listdir("experiments/specs") if f.endswith(".md")]
+specs_dir = ppath("experiments/specs")
+if os.path.isdir(specs_dir):
+    specs = [f for f in os.listdir(specs_dir) if f.endswith(".md")]
 
 # Check paper drafts
 drafts = []
-if os.path.isdir("papers/drafts"):
-    drafts = [f for f in os.listdir("papers/drafts") if f.endswith(".md")]
+drafts_dir = ppath("papers/drafts")
+if os.path.isdir(drafts_dir):
+    drafts = [f for f in os.listdir(drafts_dir) if f.endswith(".md")]
 
 lines = []
 lines.append(f"## Session State — Updated {datetime.datetime.now().strftime('%Y-%m-%d %H:%M')}")
 lines.append("")
-lines.append(f"**Last milestone:** {os.environ.get('MILESTONE', 'unknown')}")
+lines.append(f"**Last milestone:** {milestone}")
 lines.append("")
 lines.append("### Project Status")
 lines.append("")
@@ -106,6 +116,7 @@ lines.append("")
 lines.append("### Next Step")
 lines.append("*(run /start to get a recommendation)*")
 
+os.makedirs(os.path.dirname(state_file), exist_ok=True)
 with open(state_file, "w") as f:
     f.write("\n".join(lines) + "\n")
 PYEOF
